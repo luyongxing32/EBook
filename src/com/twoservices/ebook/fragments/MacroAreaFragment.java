@@ -16,25 +16,34 @@
 package com.twoservices.ebook.fragments;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.twoservices.ebook.R;
+import com.twoservices.ebook.providers.MacroAreaTable;
+import com.twoservices.ebook.providers.MacroAreas;
 
-public class HeadlinesFragment extends ListFragment {
-    OnHeadlineSelectedListener mCallback;
+public class MacroAreaFragment extends ListFragment {
+
+    private static final String TAG = MacroAreaFragment.class.getSimpleName();
+
+    private MacroAreaTable mAreaTable;
+    private Cursor mCursor;
+
+    OnMacroAreaSelectedListener mCallback;
 
     // The container Activity must implement this interface so the frag can deliver messages
-    public interface OnHeadlineSelectedListener {
+    public interface OnMacroAreaSelectedListener {
         /**
-         * Called by HeadlinesFragment when a list item is selected
+         * Called by MacroAreaFragment when a list item is selected
          */
-        public void onArticleSelected(int position);
+        public void onMacroAreaSelected(int position);
     }
 
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +52,18 @@ public class HeadlinesFragment extends ListFragment {
         int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
                 android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
 
-        // Create an array adapter for the list view, using the Ipsum headlines array
-        setListAdapter(new ArrayAdapter<String>(getActivity(), layout, Ipsum.Headlines));
+        // Open MacroAreaTable from Database
+        mAreaTable = MacroAreaTable.getInstance();
+        mCursor = mAreaTable.getAreasData(getActivity().getContentResolver(), null, null);
+
+        if (mCursor != null && mCursor.getCount() > 0) {
+            getActivity().startManagingCursor(mCursor);
+
+            // Create an array adapter for the list view, using the Ipsum headlines array
+            //setListAdapter(new ArrayAdapter<String>(getActivity(), layout, Ipsum.Headlines));
+            setListAdapter(new MacroAreaCursorAdapter(getActivity(), layout, mCursor,
+                    new String[] { MacroAreas.MacroArea.AREA_TITLE }, new int[] { android.R.id.text1 }) );
+        }
     }
 
     @Override
@@ -53,7 +72,7 @@ public class HeadlinesFragment extends ListFragment {
 
         // When in two-pane layout, set the listview to highlight the selected list item
         // (We do this during onStart because at the point the listview is available.)
-        if (getFragmentManager().findFragmentById(R.id.article_fragment) != null) {
+        if (getFragmentManager().findFragmentById(R.id.chapter_fragment) != null) {
             getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
     }
@@ -65,17 +84,17 @@ public class HeadlinesFragment extends ListFragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception.
         try {
-            mCallback = (OnHeadlineSelectedListener) activity;
+            mCallback = (OnMacroAreaSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
+                    + " must implement OnMacroAreaSelectedListener");
         }
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // Notify the parent activity of selected item
-        mCallback.onArticleSelected(position);
+        mCallback.onMacroAreaSelected(position);
 
         // Set the item as checked to be highlighted when in two-pane layout
         getListView().setItemChecked(position, true);

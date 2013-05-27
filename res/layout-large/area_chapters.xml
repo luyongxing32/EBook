@@ -20,16 +20,16 @@ limitations under the License.
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <fragment android:name="com.twoservices.ebook.fragments.HeadlinesFragment"
+    <fragment android:name="com.twoservices.ebook.fragments.MacroAreaFragment"
               android:id="@+id/headlines_fragment"
               android:layout_weight="1"
               android:layout_width="0dp"
               android:layout_height="match_parent" tools:layout="@layout/simple_list_item_1"/>
 
-    <fragment android:name="com.twoservices.ebook.fragments.ArticleFragment"
-              android:id="@+id/article_fragment"
+    <fragment android:name="com.twoservices.ebook.fragments.ChapterFragment"
+              android:id="@+id/chapter_fragment"
               android:layout_weight="2"
               android:layout_width="0dp"
-              android:layout_height="match_parent"/>
+              android:layout_height="match_parent" tools:layout="@layout/article_view"/>
 
 </LinearLayout>

@@ -18,12 +18,13 @@ package com.twoservices.ebook;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import com.twoservices.ebook.R;
-import com.twoservices.ebook.fragments.ArticleFragment;
-import com.twoservices.ebook.fragments.HeadlinesFragment;
+import com.twoservices.ebook.fragments.ChapterFragment;
+import com.twoservices.ebook.fragments.MacroAreaFragment;
 
-public class MainActivity extends FragmentActivity
-        implements HeadlinesFragment.OnHeadlineSelectedListener {
+public class EBookActivity extends FragmentActivity
+        implements MacroAreaFragment.OnMacroAreaSelectedListener {
+
+    private static final String TAG = EBookActivity.class.getSimpleName();
 
     /**
      * Called when the activity is first created.
@@ -31,7 +32,7 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.news_articles);
+        setContentView(R.layout.area_chapters);
 
         // Check whether the activity is using the layout version with
         // the fragment_container FrameLayout. If so, we must add the first fragment
@@ -44,8 +45,8 @@ public class MainActivity extends FragmentActivity
                 return;
             }
 
-            // Create an instance of ExampleFragment
-            HeadlinesFragment firstFragment = new HeadlinesFragment();
+            // Create an instance of MacroAreaFragment
+            MacroAreaFragment firstFragment = new MacroAreaFragment();
 
             // In case this activity was started with special instructions from an Intent,
             // pass the Intent's extras to the fragment as arguments
@@ -57,26 +58,26 @@ public class MainActivity extends FragmentActivity
         }
     }
 
-    public void onArticleSelected(int position) {
-        // The user selected the headline of an article from the HeadlinesFragment
+    public void onMacroAreaSelected(int position) {
+        // The user selected the MacroArea from the MacroAreaFragment
 
         // Capture the article fragment from the activity layout
-        ArticleFragment articleFrag = (ArticleFragment)
-                getSupportFragmentManager().findFragmentById(R.id.article_fragment);
+        ChapterFragment chapterFragment = (ChapterFragment)
+                getSupportFragmentManager().findFragmentById(R.id.chapter_fragment);
 
-        if (articleFrag != null) {
-            // If article frag is available, we're in two-pane layout...
+        if (chapterFragment != null) {
+            // If chapter fragment is available, we're in two-pane layout...
 
-            // Call a method in the ArticleFragment to update its content
-            articleFrag.updateArticleView(position);
+            // Call a method in the ChapterFragment to update its content
+            chapterFragment.updateChapterView(position);
 
         } else {
-            // If the frag is not available, we're in the one-pane layout and must swap frags...
+            // If chapter fragment is not available, we're in the one-pane layout and must swap frags...
 
             // Create fragment and give it an argument for the selected article
-            ArticleFragment newFragment = new ArticleFragment();
+            ChapterFragment newFragment = new ChapterFragment();
             Bundle args = new Bundle();
-            args.putInt(ArticleFragment.ARG_POSITION, position);
+            args.putInt(ChapterFragment.ARG_POSITION, position);
             newFragment.setArguments(args);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 

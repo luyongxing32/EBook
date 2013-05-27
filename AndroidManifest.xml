@@ -26,7 +26,7 @@ limitations under the License.
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name">
         <activity
-                android:name=".MainActivity"
+                android:name=".EBookActivity"
                 android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -35,8 +35,8 @@ limitations under the License.
         </activity>
 
         <provider
-                android:name=".providers.UsersContentProvider"
-                android:authorities="com.twoservices.ebook.providers.UsersContentProvider"
+                android:name=".providers.EBookContentProvider"
+                android:authorities="com.twoservices.ebook.providers.EBookContentProvider"
                 android:exported="false" />
     </application>
 
