@@ -23,9 +23,10 @@ public class MacroAreaCursorAdapter extends SimpleCursorAdapter {
     Context context;
     Cursor c;
     int layout;
+    static TextView row = null;
 
     public MacroAreaCursorAdapter(Context context, int layout, Cursor c,
-                                 String[] from, int[] to) {
+                                  String[] from, int[] to) {
         super(context, layout, c, from, to);
 
         this.context = context;
@@ -35,15 +36,19 @@ public class MacroAreaCursorAdapter extends SimpleCursorAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null)
-            convertView = View.inflate(context, layout, null);
-        TextView row = (TextView) convertView;
+        if (convertView == null) {
+            row = (TextView) View.inflate(context, layout, null);
+        } else {
+            row = (TextView) convertView;
+        }
 
-        c.moveToPosition(position);
+        if (c != null) {
+            c.moveToPosition(position);
 
-        row.setText(c.getString(MacroAreaTable.AreaDataQuery.AREA_TITLE));
-        row.setTextColor(c.getInt(MacroAreaTable.AreaDataQuery.AREA_FGCOLOR));
-        row.setBackgroundColor(c.getInt(MacroAreaTable.AreaDataQuery.ARER_BGCOLOR));
+            row.setText(c.getString(MacroAreaTable.AreaDataQuery.AREA_TITLE));
+            row.setTextColor(c.getInt(MacroAreaTable.AreaDataQuery.AREA_FGCOLOR));
+            row.setBackgroundColor(c.getInt(MacroAreaTable.AreaDataQuery.ARER_BGCOLOR));
+        }
 
         return row;
     }

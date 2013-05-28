@@ -52,7 +52,7 @@ public class ModuleTable {
     public interface ModuleDataQuery {
         /* Here we define columns which we need */
         String[] PROJECTION = {
-                Modules.Module.MODULE_ID,
+                Modules.Module.MODULE_ID + " AS _id",
                 Modules.Module.MODULE_TOPIC_ID,
                 Modules.Module.MODULD_TITLE,
                 Modules.Module.MODULE_THUMB_ID,

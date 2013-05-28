@@ -52,7 +52,7 @@ public class TopicTable {
     public interface TopicDataQuery {
         /* Here we define columns which we need */
         String[] PROJECTION = {
-                Topics.Topic.TOPIC_ID,
+                Topics.Topic.TOPIC_ID + " AS _id",
                 Topics.Topic.TOPIC_CHAPTER_ID,
                 Topics.Topic.TOPIC_TITLE,
         };

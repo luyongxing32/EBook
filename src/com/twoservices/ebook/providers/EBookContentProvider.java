@@ -17,7 +17,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.util.Log;
 import com.twoservices.ebook.providers.Chapters.Chapter;
 import com.twoservices.ebook.providers.MacroAreas.MacroArea;
 import com.twoservices.ebook.providers.Modules.Module;
@@ -86,47 +85,10 @@ public class EBookContentProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-//            db.execSQL("CREATE TABLE IF NOT EXISTS " + AREAS_TABLE_NAME + " ("
-//                    + MacroArea.AREA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-//                    + MacroArea.AREA_FGCOLOR + " TEXT, "
-//                    + MacroArea.AREA_BGCOLOR + " VARCHAR(255), "
-//                    + MacroAreas.MacroArea.AREA_TITLE + " TEXT, "
-//                    + "UNIQUE (" + MacroArea.AREA_BGCOLOR + ", " + MacroArea.AREA_TITLE + ") ON CONFLICT REPLACE)");
-
-            Log.w(TAG, "Append field '_id' to " + AREAS_TABLE_NAME + " in database.");
-            db.execSQL("ALTER TABLE " + AREAS_TABLE_NAME + " RENAME TO temp_table");
-            db.execSQL("CREATE TABLE " + AREAS_TABLE_NAME + " ("
-                    + MacroArea.AREA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + MacroArea.AREA_FGCOLOR + " INTEGER, "
-                    + MacroArea.AREA_BGCOLOR + " INTEGER, "
-                    + MacroArea.AREA_TITLE + " TEXT)");
-            db.execSQL("INSERT INTO " + AREAS_TABLE_NAME + " ("
-                    + MacroArea.AREA_FGCOLOR + ", "
-                    + MacroArea.AREA_BGCOLOR + ", "
-                    + MacroArea.AREA_TITLE
-                    + ") SELECT fgcolor,bgcolor,title FROM temp_table");
-            db.execSQL("DROP TABLE temp_table");
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//            Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion
-//                    + ", which will destroy all old data");
-//            //db.execSQL("DROP TABLE IF EXISTS " + AREAS_TABLE_NAME);
-//            db.execSQL("ALTER TABLE " + AREAS_TABLE_NAME + " RENAME TO temp_table");
-//            db.execSQL("CREATE TABLE " + AREAS_TABLE_NAME + " ("
-//                    + MacroArea.AREA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-//                    + MacroArea.AREA_FGCOLOR + " INTEGER, "
-//                    + MacroArea.AREA_BGCOLOR + " INTEGER, "
-//                    + MacroArea.AREA_TITLE + " TEXT");
-//            db.execSQL("INSERT INTO " + AREAS_TABLE_NAME + " ("
-//                    + MacroArea.AREA_ID + ", "
-//                    + MacroArea.AREA_FGCOLOR + ", "
-//                    + MacroArea.AREA_BGCOLOR + ", "
-//                    + MacroArea.AREA_TITLE + ", "
-//                    + ") SELECT sfgcolor,bgcolor,title FROM temp_table");
-//            db.execSQL("DROP TABLE temp_table");
-//            onCreate(db);
         }
 
     }

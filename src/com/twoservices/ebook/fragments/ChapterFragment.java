@@ -17,55 +17,87 @@ package com.twoservices.ebook.fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.support.v4.app.ListFragment;
 import com.twoservices.ebook.R;
 import com.twoservices.ebook.providers.ChapterTable;
 import com.twoservices.ebook.providers.Chapters;
 
-public class ChapterFragment extends Fragment {
+public class ChapterFragment extends ListFragment {
 
     public final static String ARG_POSITION = "position";
-    int mCurrentPosition = -1;
-
+    public final static String ARG_FORE_COLOR = "forecolor";
+    public final static String ARG_BACK_COLOR = "backcolor";
+    static final String TAG = ChapterFragment.class.getSimpleName();
+    int mCurrentPosition = 0;
+    int mCurrentForeColor = 0xFF000080;
+    int mCurrentBackColor = 0xFFFFFFFF;
     private ChapterTable mChapterTable;
     private Cursor mCursor;
+    private ChapterCursorAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Open ChapterTable from Database
-        mChapterTable = ChapterTable.getInstance();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
 
         // If activity recreated (such as from screen rotate), restore
         // the previous chapter selection set by onSaveInstanceState().
         // This is primarily necessary when in the two-pane layout.
         if (savedInstanceState != null) {
             mCurrentPosition = savedInstanceState.getInt(ARG_POSITION);
+            mCurrentForeColor = savedInstanceState.getInt(ARG_FORE_COLOR);
+            mCurrentBackColor = savedInstanceState.getInt(ARG_BACK_COLOR);
         }
 
-        // Get cursor with selected area position
+        // Open ChapterTable from Database
+        mChapterTable = ChapterTable.getInstance();
+
+        // Get cursor with the position of selected area
         mCursor = mChapterTable.getChapterData(getActivity().getContentResolver(),
-                Chapters.Chapter.CHAPTER_AREA_ID + "=?",
-                new String[] { String.format("%s", mCurrentPosition+1) });
+                Chapters.Chapter.CHAPTER_AREA_ID + "=" + String.format("%s", mCurrentPosition + 1), null);
 
-        if (mCursor != null && mCursor.getCount() > 0) {
-            getActivity().startManagingCursor(mCursor);
+        getActivity().startManagingCursor(mCursor);
 
-        }
+        // Create an array adapter for the list view, using mCursor
+        mAdapter = new ChapterCursorAdapter(getActivity(), R.layout.chapter_item,
+                mCursor, new String[]{Chapters.Chapter.CHAPTER_TITLE},
+                new int[]{R.id.text_chapter_title}, mCurrentBackColor, mCurrentForeColor);
+        mAdapter.setForeColor(mCurrentForeColor);
+        mAdapter.setBackColor(mCurrentBackColor);
 
-            // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.chapter_view, container, false);
+        setListAdapter(mAdapter);
     }
+
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//
+//        // If activity recreated (such as from screen rotate), restore
+//        // the previous chapter selection set by onSaveInstanceState().
+//        // This is primarily necessary when in the two-pane layout.
+//        if (savedInstanceState != null) {
+//            mCurrentPosition = savedInstanceState.getInt(ARG_POSITION);
+//            mCurrentForeColor = savedInstanceState.getInt(ARG_FORE_COLOR);
+//            mCurrentBackColor = savedInstanceState.getInt(ARG_BACK_COLOR);
+//        }
+//
+//        mAdapter.setForeColor(mCurrentForeColor);
+//        mAdapter.setBackColor(mCurrentBackColor);
+//
+//        // Get cursor with the position of selected area
+//        mCursor = mChapterTable.getChapterData(getActivity().getContentResolver(),
+//                Chapters.Chapter.CHAPTER_AREA_ID + "=" + String.format("%s", mCurrentPosition + 1), null);
+//
+//        getActivity().startManagingCursor(mCursor);
+//
+//        // Create an array adapter for the list view, using mCursor
+//        mAdapter = new ChapterCursorAdapter(getActivity(), R.layout.chapter_item,
+//                mCursor, new String[]{Chapters.Chapter.CHAPTER_TITLE},
+//                new int[]{R.id.text_chapter_title}, mCurrentForeColor, mCurrentBackColor);
+//        setListAdapter(mAdapter);
+//
+//        // Inflate the layout for this fragment
+//        return this.getListView();
+//    }
 
     @Override
     public void onStart() {
@@ -78,17 +110,34 @@ public class ChapterFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             // Set chapter based on argument passed in
-            updateChapterView(args.getInt(ARG_POSITION));
+            updateChapterView(args.getInt(ARG_POSITION), args.getInt(ARG_FORE_COLOR),
+                    args.getInt(ARG_BACK_COLOR));
         } else if (mCurrentPosition != -1) {
             // Set chapter based on saved instance state defined during onCreateView
-            updateChapterView(mCurrentPosition);
+            updateChapterView(mCurrentPosition, mCurrentForeColor, mCurrentBackColor);
         }
     }
 
-    public void updateChapterView(int position) {
-        TextView chapterText = (TextView) getActivity().findViewById(R.id.article);
-        chapterText.setText(Ipsum.Articles[position]);
+    public void updateChapterView(int position, int forecolor, int backcolor) {
         mCurrentPosition = position;
+        mCurrentForeColor = forecolor;
+        mCurrentBackColor = backcolor;
+
+        mAdapter.setForeColor(forecolor);
+        mAdapter.setBackColor(backcolor);
+
+        // Get cursor with the position of selected area
+        mCursor = mChapterTable.getChapterData(getActivity().getContentResolver(),
+                Chapters.Chapter.CHAPTER_AREA_ID + "=" + String.format("%s", mCurrentPosition + 1), null);
+
+        getActivity().startManagingCursor(mCursor);
+
+        // Create an array adapter for the list view, using mCursor
+        mAdapter = new ChapterCursorAdapter(getActivity(), R.layout.chapter_item,
+                mCursor, new String[]{Chapters.Chapter.CHAPTER_TITLE},
+                new int[]{R.id.text_chapter_title}, mCurrentBackColor, mCurrentForeColor);
+
+        setListAdapter(mAdapter);
     }
 
     @Override
@@ -97,5 +146,7 @@ public class ChapterFragment extends Fragment {
 
         // Save the current article selection in case we need to recreate the fragment
         outState.putInt(ARG_POSITION, mCurrentPosition);
+        outState.putInt(ARG_FORE_COLOR, mCurrentForeColor);
+        outState.putInt(ARG_BACK_COLOR, mCurrentBackColor);
     }
 }

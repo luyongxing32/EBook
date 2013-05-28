@@ -52,7 +52,7 @@ public class MacroAreaTable {
     public interface AreaDataQuery {
         /* Here we define columns which we need */
         String[] PROJECTION = {
-                MacroAreas.MacroArea.AREA_ID,
+                MacroAreas.MacroArea.AREA_ID + " AS _id",
                 MacroAreas.MacroArea.AREA_FGCOLOR,
                 MacroAreas.MacroArea.AREA_BGCOLOR,
                 MacroAreas.MacroArea.AREA_TITLE

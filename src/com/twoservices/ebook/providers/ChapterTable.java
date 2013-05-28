@@ -52,8 +52,8 @@ public class ChapterTable {
     public interface ChapterDataQuery {
         /* Here we define columns which we need */
         String[] PROJECTION = {
+                Chapters.Chapter.CHAPTER_ID + " AS _id",
                 Chapters.Chapter.CHAPTER_AREA_ID,
-                Chapters.Chapter.CHAPTER_ID,
                 Chapters.Chapter.CHAPTER_TITLE,
                 Chapters.Chapter.CAHPTER_FLAGS
         };

@@ -17,18 +17,20 @@ package com.twoservices.ebook.fragments;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.twoservices.ebook.R;
 import com.twoservices.ebook.providers.MacroAreaTable;
 import com.twoservices.ebook.providers.MacroAreas;
 
 public class MacroAreaFragment extends ListFragment {
 
-    private static final String TAG = MacroAreaFragment.class.getSimpleName();
+    static final String TAG = MacroAreaFragment.class.getSimpleName();
 
     private MacroAreaTable mAreaTable;
     private Cursor mCursor;
@@ -40,7 +42,7 @@ public class MacroAreaFragment extends ListFragment {
         /**
          * Called by MacroAreaFragment when a list item is selected
          */
-        public void onMacroAreaSelected(int position);
+        public void onMacroAreaSelected(int position, int forecolor, int backcolor);
     }
 
     
@@ -59,8 +61,7 @@ public class MacroAreaFragment extends ListFragment {
         if (mCursor != null && mCursor.getCount() > 0) {
             getActivity().startManagingCursor(mCursor);
 
-            // Create an array adapter for the list view, using the Ipsum headlines array
-            //setListAdapter(new ArrayAdapter<String>(getActivity(), layout, Ipsum.Headlines));
+            // Create an array adapter for the list view, using mCursor
             setListAdapter(new MacroAreaCursorAdapter(getActivity(), layout, mCursor,
                     new String[] { MacroAreas.MacroArea.AREA_TITLE }, new int[] { android.R.id.text1 }) );
         }
@@ -93,8 +94,13 @@ public class MacroAreaFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        TextView titleText = (TextView) v;
+        int forecolor = titleText.getTextColors().getDefaultColor();
+        ColorDrawable background = (ColorDrawable) titleText.getBackground();
+        int backcolor = background.getColor();
+
         // Notify the parent activity of selected item
-        mCallback.onMacroAreaSelected(position);
+        mCallback.onMacroAreaSelected(position, forecolor, backcolor);
 
         // Set the item as checked to be highlighted when in two-pane layout
         getListView().setItemChecked(position, true);

@@ -22,7 +22,7 @@ public class Topics {
 
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.ebook.topic";
 
-        public static final String TOPIC_ID = "id";
+        public static final String TOPIC_ID = "rowid";
         public static final String TOPIC_CHAPTER_ID = "chapter_id";
         public static final String TOPIC_TITLE = "title";
     }

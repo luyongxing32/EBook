@@ -22,7 +22,7 @@ public class Modules {
 
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.ebook.module";
 
-        public static final String MODULE_ID = "id";
+        public static final String MODULE_ID = "rowid";
         public static final String MODULE_TOPIC_ID = "topic_id";
         public static final String MODULD_TITLE = "title";
         public static final String MODULE_THUMB_ID = "thumbId";

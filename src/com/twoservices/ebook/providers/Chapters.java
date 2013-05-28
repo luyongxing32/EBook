@@ -22,7 +22,7 @@ public class Chapters {
 
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.ebook.chapter";
 
-        public static final String CHAPTER_ID = "id";
+        public static final String CHAPTER_ID = "rowid";
         public static final String CHAPTER_AREA_ID = "area_id";
         public static final String CHAPTER_TITLE = "title";
         public static final String CAHPTER_FLAGS = "flags";

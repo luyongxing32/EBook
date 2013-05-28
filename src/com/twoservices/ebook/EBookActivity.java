@@ -58,7 +58,7 @@ public class EBookActivity extends FragmentActivity
         }
     }
 
-    public void onMacroAreaSelected(int position) {
+    public void onMacroAreaSelected(int position, int forecolor, int backcolor) {
         // The user selected the MacroArea from the MacroAreaFragment
 
         // Capture the article fragment from the activity layout
@@ -69,7 +69,7 @@ public class EBookActivity extends FragmentActivity
             // If chapter fragment is available, we're in two-pane layout...
 
             // Call a method in the ChapterFragment to update its content
-            chapterFragment.updateChapterView(position);
+            chapterFragment.updateChapterView(position, forecolor, backcolor);
 
         } else {
             // If chapter fragment is not available, we're in the one-pane layout and must swap frags...
@@ -78,6 +78,8 @@ public class EBookActivity extends FragmentActivity
             ChapterFragment newFragment = new ChapterFragment();
             Bundle args = new Bundle();
             args.putInt(ChapterFragment.ARG_POSITION, position);
+            args.putInt(ChapterFragment.ARG_FORE_COLOR, forecolor);
+            args.putInt(ChapterFragment.ARG_BACK_COLOR, backcolor);
             newFragment.setArguments(args);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 

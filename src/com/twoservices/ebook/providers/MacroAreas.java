@@ -22,7 +22,7 @@ public class MacroAreas {
 
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.ebook.area";
 
-        public static final String AREA_ID = "_id";
+        public static final String AREA_ID = "rowid";
         public static final String AREA_FGCOLOR = "fgcolor";
         public static final String AREA_BGCOLOR = "bgcolor";
         public static final String AREA_TITLE = "title";
