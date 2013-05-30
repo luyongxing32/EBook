@@ -10,17 +10,25 @@
 
 package com.twoservices.ebook.providers;
 
-import android.content.*;
+import android.content.ContentProvider;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import com.twoservices.ebook.providers.Chapters.Chapter;
-import com.twoservices.ebook.providers.MacroAreas.MacroArea;
-import com.twoservices.ebook.providers.Modules.Module;
-import com.twoservices.ebook.providers.Topics.Topic;
+
+import com.twoservices.ebook.providers.EBook.Chapter;
+import com.twoservices.ebook.providers.EBook.MacroArea;
+import com.twoservices.ebook.providers.EBook.Media;
+import com.twoservices.ebook.providers.EBook.MetaInfo;
+import com.twoservices.ebook.providers.EBook.Module;
+import com.twoservices.ebook.providers.EBook.Template;
+import com.twoservices.ebook.providers.EBook.Topic;
 import com.twoservices.ebook.utils.RestoreDatabase;
 
 import java.util.HashMap;
@@ -48,16 +56,25 @@ public class EBookContentProvider extends ContentProvider {
     protected static final String CHAPTER_TABLE_NAME = "chapter";
     protected static final String TOPIC_TABLE_NAME = "topic";
     protected static final String MODULE_TABLE_NAME = "module";
+    protected static final String METAINFO_TABLE_NAME = "metainfo";
+    protected static final String TEMPLATE_TABLE_NAME = "template";
+    protected static final String MEDIA_TABLE_NAME = "media";
 
-    private static final int MACROAREAS = 1;
-    private static final int CHAPTERS = 2;
-    private static final int TOPICS = 3;
-    private static final int MODULES = 4;
+    private static final int MACROAREA = 1;
+    private static final int CHAPTER = 2;
+    private static final int TOPIC = 3;
+    private static final int MODULE = 4;
+    private static final int METAINFO = 5;
+    private static final int TEMPLATE = 6;
+    private static final int MEDIA = 7;
 
     private static HashMap<String, String> areasProjectionMap;
     private static HashMap<String, String> chaptersProjectionMap;
     private static HashMap<String, String> topicsProjectionMap;
     private static HashMap<String, String> modulesProjectionMap;
+    private static HashMap<String, String> metainfosProjectionMap;
+    private static HashMap<String, String> templatesProjectionMap;
+    private static HashMap<String, String> mediasProjectionMap;
 
     private static final UriMatcher sUriMatcher;
 
@@ -65,10 +82,13 @@ public class EBookContentProvider extends ContentProvider {
 
     static {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        sUriMatcher.addURI(AUTHORITY, AREAS_TABLE_NAME, MACROAREAS);
-        sUriMatcher.addURI(AUTHORITY, CHAPTER_TABLE_NAME, CHAPTERS);
-        sUriMatcher.addURI(AUTHORITY, TOPIC_TABLE_NAME, TOPICS);
-        sUriMatcher.addURI(AUTHORITY, MODULE_TABLE_NAME, MODULES);
+        sUriMatcher.addURI(AUTHORITY, AREAS_TABLE_NAME, MACROAREA);
+        sUriMatcher.addURI(AUTHORITY, CHAPTER_TABLE_NAME, CHAPTER);
+        sUriMatcher.addURI(AUTHORITY, TOPIC_TABLE_NAME, TOPIC);
+        sUriMatcher.addURI(AUTHORITY, MODULE_TABLE_NAME, MODULE);
+        sUriMatcher.addURI(AUTHORITY, METAINFO_TABLE_NAME, METAINFO);
+        sUriMatcher.addURI(AUTHORITY, TEMPLATE_TABLE_NAME, TEMPLATE);
+        sUriMatcher.addURI(AUTHORITY, MEDIA_TABLE_NAME, MEDIA);
 
         areasProjectionMap = new HashMap<String, String>();
         areasProjectionMap.put(MacroArea.AREA_ID, MacroArea.AREA_ID);
@@ -98,20 +118,32 @@ public class EBookContentProvider extends ContentProvider {
         SQLiteDatabase db = this.dbHelper.getWritableDatabase();
         int count;
         switch (sUriMatcher.match(uri)) {
-            case MACROAREAS:
+            case MACROAREA:
                 count = db.delete(AREAS_TABLE_NAME, selection, selectionArgs);
                 break;
 
-            case CHAPTERS:
+            case CHAPTER:
                 count = db.delete(CHAPTER_TABLE_NAME, selection, selectionArgs);
                 break;
 
-            case TOPICS:
+            case TOPIC:
                 count = db.delete(TOPIC_TABLE_NAME, selection, selectionArgs);
                 break;
 
-            case MODULES:
+            case MODULE:
                 count = db.delete(MODULE_TABLE_NAME, selection, selectionArgs);
+                break;
+
+            case TEMPLATE:
+                count = db.delete(TEMPLATE_TABLE_NAME, selection, selectionArgs);
+                break;
+
+            case MEDIA:
+                count = db.delete(MEDIA_TABLE_NAME, selection, selectionArgs);
+                break;
+
+            case METAINFO:
+                count = db.delete(METAINFO_TABLE_NAME, selection, selectionArgs);
                 break;
 
             default:
@@ -125,17 +157,26 @@ public class EBookContentProvider extends ContentProvider {
     @Override
     public String getType(Uri uri) {
         switch (sUriMatcher.match(uri)) {
-            case MACROAREAS:
+            case MACROAREA:
                 return MacroArea.CONTENT_TYPE;
 
-            case CHAPTERS:
+            case CHAPTER:
                 return Chapter.CONTENT_TYPE;
 
-            case TOPICS:
+            case TOPIC:
                 return Topic.CONTENT_TYPE;
 
-            case MODULES:
+            case MODULE:
                 return Module.CONTENT_TYPE;
+
+            case TEMPLATE:
+                return Template.CONTENT_TYPE;
+
+            case MEDIA:
+                return Media.CONTENT_TYPE;
+
+            case METAINFO:
+                return MetaInfo.CONTENT_TYPE;
 
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -155,7 +196,7 @@ public class EBookContentProvider extends ContentProvider {
         long rowId = -1;
 
         switch (sUriMatcher.match(uri)) {
-            case MACROAREAS:
+            case MACROAREA:
                 rowId = db.insert(AREAS_TABLE_NAME, null, values);
                 if (rowId > -1) {
                     Uri areaUri = ContentUris.withAppendedId(MacroArea.CONTENT_URI, rowId);
@@ -165,7 +206,7 @@ public class EBookContentProvider extends ContentProvider {
                     throw new SQLException("Failed to insert row into " + uri);
                 }
 
-            case CHAPTERS:
+            case CHAPTER:
                 rowId = db.insert(CHAPTER_TABLE_NAME, null, values);
                 if (rowId > -1) {
                     Uri chapterUri = ContentUris.withAppendedId(Chapter.CONTENT_URI, rowId);
@@ -175,7 +216,7 @@ public class EBookContentProvider extends ContentProvider {
                     throw new SQLException("Failed to insert row into " + uri);
                 }
 
-            case TOPICS:
+            case TOPIC:
                 rowId = db.insert(TOPIC_TABLE_NAME, null, values);
                 if (rowId > -1) {
                     Uri topicUri = ContentUris.withAppendedId(Topic.CONTENT_URI, rowId);
@@ -185,7 +226,7 @@ public class EBookContentProvider extends ContentProvider {
                     throw new SQLException("Failed to insert row into " + uri);
                 }
 
-            case MODULES:
+            case MODULE:
                 rowId = db.insert(MODULE_TABLE_NAME, null, values);
                 if (rowId > -1) {
                     Uri moduleUri = ContentUris.withAppendedId(Module.CONTENT_URI, rowId);
@@ -219,24 +260,39 @@ public class EBookContentProvider extends ContentProvider {
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
         switch (sUriMatcher.match(uri)) {
-            case MACROAREAS:
+            case MACROAREA:
                 qb.setTables(AREAS_TABLE_NAME);
                 qb.setProjectionMap(areasProjectionMap);
                 break;
 
-            case CHAPTERS:
+            case CHAPTER:
                 qb.setTables(CHAPTER_TABLE_NAME);
                 qb.setProjectionMap(chaptersProjectionMap);
                 break;
 
-            case TOPICS:
+            case TOPIC:
                 qb.setTables(TOPIC_TABLE_NAME);
                 qb.setProjectionMap(topicsProjectionMap);
                 break;
 
-            case MODULES:
+            case MODULE:
                 qb.setTables(MODULE_TABLE_NAME);
                 qb.setProjectionMap(modulesProjectionMap);
+                break;
+
+            case TEMPLATE:
+                qb.setTables(TEMPLATE_TABLE_NAME);
+                qb.setProjectionMap(templatesProjectionMap);
+                break;
+
+            case MEDIA:
+                qb.setTables(MEDIA_TABLE_NAME);
+                qb.setProjectionMap(mediasProjectionMap);
+                break;
+
+            case METAINFO:
+                qb.setTables(METAINFO_TABLE_NAME);
+                qb.setProjectionMap(metainfosProjectionMap);
                 break;
 
             default:
@@ -256,19 +312,19 @@ public class EBookContentProvider extends ContentProvider {
         SQLiteDatabase db = this.dbHelper.getWritableDatabase();
         int count;
         switch (sUriMatcher.match(uri)) {
-            case MACROAREAS:
+            case MACROAREA:
                 count = db.update(AREAS_TABLE_NAME, values, selection, selectionArgs);
                 break;
 
-            case CHAPTERS:
+            case CHAPTER:
                 count = db.update(CHAPTER_TABLE_NAME, values, selection, selectionArgs);
                 break;
 
-            case TOPICS:
+            case TOPIC:
                 count = db.update(TOPIC_TABLE_NAME, values, selection, selectionArgs);
                 break;
 
-            case MODULES:
+            case MODULE:
                 count = db.update(MODULE_TABLE_NAME, values, selection, selectionArgs);
                 break;
 

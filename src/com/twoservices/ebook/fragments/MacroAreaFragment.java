@@ -24,9 +24,10 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.twoservices.ebook.R;
+import com.twoservices.ebook.providers.EBook;
 import com.twoservices.ebook.providers.MacroAreaTable;
-import com.twoservices.ebook.providers.MacroAreas;
 
 public class MacroAreaFragment extends ListFragment {
 
@@ -63,7 +64,7 @@ public class MacroAreaFragment extends ListFragment {
 
             // Create an array adapter for the list view, using mCursor
             setListAdapter(new MacroAreaCursorAdapter(getActivity(), layout, mCursor,
-                    new String[] { MacroAreas.MacroArea.AREA_TITLE }, new int[] { android.R.id.text1 }) );
+                    new String[] { EBook.MacroArea.AREA_TITLE }, new int[] { android.R.id.text1 }) );
         }
     }
 

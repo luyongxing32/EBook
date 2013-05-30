@@ -16,6 +16,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.twoservices.ebook.providers.MacroAreaTable;
 
 public class MacroAreaCursorAdapter extends SimpleCursorAdapter {

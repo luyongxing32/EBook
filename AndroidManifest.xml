@@ -20,7 +20,7 @@ limitations under the License.
           android:versionCode="1"
           android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="17"/>
+    <uses-sdk android:minSdkVersion="11" android:targetSdkVersion="17"/>
 
     <application
             android:icon="@drawable/ic_launcher"
@@ -35,6 +35,10 @@ limitations under the License.
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".ModuleSelectActivity"/>
+
+        <activity android:name=".TemplateActivity"/>
 
         <provider
                 android:name=".providers.EBookContentProvider"

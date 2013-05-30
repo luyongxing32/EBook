@@ -18,6 +18,7 @@ package com.twoservices.ebook;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+
 import com.twoservices.ebook.fragments.ChapterFragment;
 import com.twoservices.ebook.fragments.MacroAreaFragment;
 
@@ -32,6 +33,8 @@ public class EBookActivity extends FragmentActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Config.loadLastSelectedArea(this);
         setContentView(R.layout.area_chapters);
 
         // Check whether the activity is using the layout version with
@@ -58,8 +61,18 @@ public class EBookActivity extends FragmentActivity
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        Config.saveLastSelectedArea(this);
+
+        super.onDestroy();
+    }
+
     public void onMacroAreaSelected(int position, int forecolor, int backcolor) {
         // The user selected the MacroArea from the MacroAreaFragment
+        Config.sCurrentAreaIndex = position;
+        Config.sCurrentForeColor = forecolor;
+        Config.sCurrentBackColor = backcolor;
 
         // Capture the article fragment from the activity layout
         ChapterFragment chapterFragment = (ChapterFragment)

@@ -42,7 +42,7 @@ public class ChapterTable {
      * @return
      */
     public Cursor getChapterData(ContentResolver contentResolver, String selection, String[] selectionArgs) {
-        return contentResolver.query(Chapters.Chapter.CONTENT_URI, ChapterDataQuery.PROJECTION, selection, selectionArgs, null);
+        return contentResolver.query(EBook.Chapter.CONTENT_URI, ChapterDataQuery.PROJECTION, selection, selectionArgs, null);
     }
 
     /**
@@ -52,10 +52,10 @@ public class ChapterTable {
     public interface ChapterDataQuery {
         /* Here we define columns which we need */
         String[] PROJECTION = {
-                Chapters.Chapter.CHAPTER_ID + " AS _id",
-                Chapters.Chapter.CHAPTER_AREA_ID,
-                Chapters.Chapter.CHAPTER_TITLE,
-                Chapters.Chapter.CAHPTER_FLAGS
+                EBook.Chapter.CHAPTER_ID + " AS _id",
+                EBook.Chapter.CHAPTER_AREA_ID,
+                EBook.Chapter.CHAPTER_TITLE,
+                EBook.Chapter.CAHPTER_FLAGS
         };
 
         /* Here we define columns indices according to PROJECTION */

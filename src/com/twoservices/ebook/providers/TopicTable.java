@@ -42,7 +42,7 @@ public class TopicTable {
      * @return
      */
     public Cursor getTopicData(ContentResolver contentResolver, String selection, String[] selectionArgs) {
-        return contentResolver.query(Topics.Topic.CONTENT_URI, TopicDataQuery.PROJECTION, selection, selectionArgs, null);
+        return contentResolver.query(EBook.Topic.CONTENT_URI, TopicDataQuery.PROJECTION, selection, selectionArgs, null);
     }
 
     /**
@@ -52,9 +52,9 @@ public class TopicTable {
     public interface TopicDataQuery {
         /* Here we define columns which we need */
         String[] PROJECTION = {
-                Topics.Topic.TOPIC_ID + " AS _id",
-                Topics.Topic.TOPIC_CHAPTER_ID,
-                Topics.Topic.TOPIC_TITLE,
+                EBook.Topic.TOPIC_ID + " AS _id",
+                EBook.Topic.TOPIC_CHAPTER_ID,
+                EBook.Topic.TOPIC_TITLE,
         };
 
         /* Here we define columns indices according to PROJECTION */

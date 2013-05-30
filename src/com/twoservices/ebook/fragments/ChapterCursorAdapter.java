@@ -12,6 +12,7 @@ package com.twoservices.ebook.fragments;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
@@ -19,10 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.twoservices.ebook.ModuleSelectActivity;
 import com.twoservices.ebook.R;
 import com.twoservices.ebook.providers.ChapterTable;
+import com.twoservices.ebook.providers.EBook;
 import com.twoservices.ebook.providers.TopicTable;
-import com.twoservices.ebook.providers.Topics;
 
 public class ChapterCursorAdapter extends SimpleCursorAdapter {
 
@@ -81,7 +84,7 @@ public class ChapterCursorAdapter extends SimpleCursorAdapter {
             // Process topic items
             // First, get cursor of TopicTable
             mTopicCursor = mTopicTable.getTopicData(mContentResolver,
-                    Topics.Topic.TOPIC_CHAPTER_ID + "=" + id, null);
+                    EBook.Topic.TOPIC_CHAPTER_ID + "=" + id, null);
 
             // Add topic items
             holder.topicContainer.removeAllViews();
@@ -107,7 +110,7 @@ public class ChapterCursorAdapter extends SimpleCursorAdapter {
         return convertView;
     }
 
-    private void addTopicItemView(LinearLayout container, final int chapterIndex, final int topicIndex, String topicTitle) {
+    private void addTopicItemView(LinearLayout container, final int chapterIndex, final int topicIndex, final String topicTitle) {
 
         LinearLayout oneTopicItem = (LinearLayout) View.inflate(context, R.layout.topic_item, null);
         TextView topicNumText = (TextView) oneTopicItem.findViewById(R.id.text_topic_num);
@@ -124,6 +127,11 @@ public class ChapterCursorAdapter extends SimpleCursorAdapter {
             public void onClick(View view) {
 
                 Log.e("ChapterCursorAdapter", "click at (" + chapterIndex + ", " + topicIndex + ")");
+                Intent intent = new Intent(context, ModuleSelectActivity.class);
+                intent.putExtra(ModuleSelectActivity.ARG_CHAPTER_INDEX, chapterIndex);
+                intent.putExtra(ModuleSelectActivity.ARG_TOPIC_INDEX, topicIndex);
+                intent.putExtra(ModuleSelectActivity.ARG_TOPIC_TITLE, topicTitle);
+                context.startActivity(intent);
             }
         });
 

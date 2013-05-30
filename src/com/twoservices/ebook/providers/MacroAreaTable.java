@@ -42,7 +42,7 @@ public class MacroAreaTable {
      * @return
      */
     public Cursor getAreasData(ContentResolver contentResolver, String selection, String[] selectionArgs) {
-        return contentResolver.query(MacroAreas.MacroArea.CONTENT_URI, AreaDataQuery.PROJECTION, selection, selectionArgs, null);
+        return contentResolver.query(EBook.MacroArea.CONTENT_URI, AreaDataQuery.PROJECTION, selection, selectionArgs, null);
     }
 
     /**
@@ -52,10 +52,10 @@ public class MacroAreaTable {
     public interface AreaDataQuery {
         /* Here we define columns which we need */
         String[] PROJECTION = {
-                MacroAreas.MacroArea.AREA_ID + " AS _id",
-                MacroAreas.MacroArea.AREA_FGCOLOR,
-                MacroAreas.MacroArea.AREA_BGCOLOR,
-                MacroAreas.MacroArea.AREA_TITLE
+                EBook.MacroArea.AREA_ID + " AS _id",
+                EBook.MacroArea.AREA_FGCOLOR,
+                EBook.MacroArea.AREA_BGCOLOR,
+                EBook.MacroArea.AREA_TITLE
         };
 
         /* Here we define columns indices according to PROJECTION */

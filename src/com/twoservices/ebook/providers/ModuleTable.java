@@ -42,7 +42,7 @@ public class ModuleTable {
      * @return
      */
     public Cursor getModuleData(ContentResolver contentResolver, String selection, String[] selectionArgs) {
-        return contentResolver.query(Modules.Module.CONTENT_URI, ModuleDataQuery.PROJECTION, selection, selectionArgs, null);
+        return contentResolver.query(EBook.Module.CONTENT_URI, ModuleDataQuery.PROJECTION, selection, selectionArgs, null);
     }
 
     /**
@@ -52,11 +52,11 @@ public class ModuleTable {
     public interface ModuleDataQuery {
         /* Here we define columns which we need */
         String[] PROJECTION = {
-                Modules.Module.MODULE_ID + " AS _id",
-                Modules.Module.MODULE_TOPIC_ID,
-                Modules.Module.MODULD_TITLE,
-                Modules.Module.MODULE_THUMB_ID,
-                Modules.Module.MODULE_TEMPLATES
+                EBook.Module.MODULE_ID + " AS _id",
+                EBook.Module.MODULE_TOPIC_ID,
+                EBook.Module.MODULD_TITLE,
+                EBook.Module.MODULE_THUMB_ID,
+                EBook.Module.MODULE_TEMPLATES
         };
 
         /* Here we define columns indices according to PROJECTION */
