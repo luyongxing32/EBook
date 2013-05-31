@@ -13,10 +13,7 @@ package com.twoservices.ebook;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,6 +21,7 @@ import android.widget.TextView;
 
 import com.twoservices.ebook.providers.MediaTable;
 import com.twoservices.ebook.providers.ModuleTable;
+import com.twoservices.ebook.utils.ImageDecoder;
 
 public class ModuleCursorAdapter extends SimpleCursorAdapter {
 
@@ -75,7 +73,7 @@ public class ModuleCursorAdapter extends SimpleCursorAdapter {
                     MediaTable.MetaInfoDataQuery.MEDIA_ID + "=" + id, null);
 
             if (mMediaCursor != null && mMediaCursor.getCount() > 0) {
-                holder.thumbImageView.setImageBitmap(decodeImage(mMediaCursor.getBlob(
+                holder.thumbImageView.setImageBitmap(ImageDecoder.decodeImage(mMediaCursor.getBlob(
                         MediaTable.MetaInfoDataQuery.MEDIA_VALUE)));
             }
 
@@ -85,17 +83,6 @@ public class ModuleCursorAdapter extends SimpleCursorAdapter {
         }
 
         return convertView;
-    }
-
-    /**
-     * Decode bitmap image from encoded image by BASE64
-     *
-     * @param encoded buffer encoded buffer by BASE64
-     * @return decoded buffer
-     */
-    private Bitmap decodeImage(byte[] encodedBuffer) {
-        byte[] decodedBuffer = Base64.decode(encodedBuffer, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(decodedBuffer, 0, decodedBuffer.length);
     }
 
     static class ViewHolder {
